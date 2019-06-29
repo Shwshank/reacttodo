@@ -2,9 +2,9 @@ import _ from 'lodash';
 import { combineReducers } from 'redux';
 
 let allUserArray=[
-  { name:"Sha1", desc:"Desc1", time:"Time1", id:"123" },
-  { name:"Sha2", desc:"Desc2", time:"Time2", id:"124" },
-  { name:"Sha3", desc:"Desc3", time:"Time3", id:"125" }
+  { name:"Sha1", desc:"Desc1", time:"", id:"123" },
+  { name:"Sha2", desc:"Desc2", time:"", id:"124" },
+  { name:"Sha3", desc:"Desc3", time:"", id:"125" }
 ]
 
 const getAllUsers = (state=[], action) => {
@@ -12,7 +12,7 @@ const getAllUsers = (state=[], action) => {
   switch(action.type) {
 
     case 'GET_ALL_USERS': {
-      state = _.uniqBy(allUserArray, 'id')
+      state = _.orderBy(allUserArray, 'id')
       return [...state]
     }
 
@@ -52,9 +52,11 @@ const getUser = (state={}, action) =>{
         state = {
           id:action.payload.id,
           name:"",
-          desc:""
+          desc:"",
+          time:""
         }
       } else {
+        console.log(allUserArray[index]);
         state = allUserArray[index]
       }
       return state

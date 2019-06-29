@@ -9,11 +9,34 @@ class UserList extends React.Component {
   constructor(props) {
     super(props);
     this.userDetails = this.userDetails.bind(this);
+    this.state = {
+      time: this.currentTime(),
+      epoch: this.currentEpoch()
+    }
   }
 
   componentWillMount(){
     this.props.getAllUsers()
+  }
 
+  componentDidMount() {
+    // Update state after 1 second
+    this.interval = setInterval(
+      () =>
+        this.setState({
+          time: this.currentTime(),
+          epoch: this.currentEpoch()
+        }),
+      1000
+    );
+  }
+
+  currentTime() {
+    return new Date().toLocaleTimeString();
+  }
+
+  currentEpoch() {
+    return new Date().valueOf()
   }
 
   newUserDetails() {
@@ -29,6 +52,28 @@ class UserList extends React.Component {
     this.props.deleteUser(id)
   }
 
+  checkEpoch(time, name) {
+    if(time) {
+      let cTime = "";
+      let d = new Date();
+      this.interval = setInterval(
+        () => {
+          let min = d.getMinutes();
+          if(min<10)
+          min +="0"
+          cTime = d.getHours()+":"+min
+          console.log(cTime +" - "+ time);
+          if(cTime === time) {
+            alert(name)
+            window.location.reload()
+          }
+        },
+        1000
+      );
+    }
+
+  }
+
   renderUserCard() {
     let i = 0;
 
@@ -37,7 +82,9 @@ class UserList extends React.Component {
         <div  key={user.id}>
           <div>
             name : {user.name} <br/>
-            desc : {user.desc}
+            desc : {user.desc} <br/>
+            reminder : {user.time}   <br/>
+            {this.checkEpoch(user.time+"", user.name)}
             <button
               onClick={this.userDetails.bind(this,user.id)}>
               edit
@@ -64,6 +111,10 @@ class UserList extends React.Component {
           onClick={this.newUserDetails.bind()}>
           Add a new task
         </button>
+
+        <br/>
+
+        <br/>
 
         <div>
           {this.renderUserCard()}

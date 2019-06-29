@@ -10,6 +10,7 @@ class UserForm extends React.Component {
       name: props.user.name,
       id: props.user.id,
       desc: props.user.desc,
+      time: props.user.time,
     }
   }
 
@@ -25,21 +26,41 @@ class UserForm extends React.Component {
     });
   };
 
+  timeChanged = async event =>{
+    await this.setState({
+      time: event.target.value
+    })
+  }
+
   saveInfo(){
     this.props.onSubmit(this.state);
     this.setState({
       name:"",
       desc:"",
       id:"",
+      time:""
     })
+  }
+
+  showTime() {
+    console.log(this.state.time);
+    if(this.state.time) {
+
+      return(
+        <div>
+         reminder @ {this.state.time}
+        </div>
+      )
+    }
   }
 
   render() {
 
       return (
+
         <div>
         <p>
-        User Details {this.state.id}
+        Task Details {this.showTime()}
         </p>
 
         <input
@@ -54,6 +75,12 @@ class UserForm extends React.Component {
         value = {this.state.desc}
         onChange = {this.descChanged}
         placeholder = "Desc"
+        />
+
+        <input
+          type="time"
+          value = {this.state.time}
+          onChange = {this.timeChanged}
         />
 
         <button
