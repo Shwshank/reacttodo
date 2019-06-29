@@ -7,11 +7,18 @@ class Header extends React.Component {
 
   componentWillMount() {}
 
+  goToHome() {
+    window.location.replace("#/userList");
+  }
 
   render() {
     return (
       <div>
-        <p>Header</p>
+        <button
+          onClick={this.goToHome.bind()}>
+          Home
+        </button>
+        <br/>
       </div>
     );
   }

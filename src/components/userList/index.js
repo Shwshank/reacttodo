@@ -2,16 +2,31 @@ import React from "react";
 import Header from "../header";
 
 import { connect } from 'react-redux';
-import { getAllUsers } from '../../actions';
+import { getAllUsers, deleteUser } from '../../actions';
 
 class UserList extends React.Component {
 
-  componentWillMount(){
-    this.props.getAllUsers()
+  constructor(props) {
+    super(props);
+    this.userDetails = this.userDetails.bind(this);
   }
 
-  userDetails() {
-    window.location.replace("#/userDetails/" + 10101);
+  componentWillMount(){
+    this.props.getAllUsers()
+
+  }
+
+  newUserDetails() {
+    let id = Math.floor(Math.random()*(893)+101);
+    window.location.replace("#/userDetails/" + id);
+  }
+
+  userDetails(id){
+    window.location.replace("#/userDetails/" + id);
+  }
+
+  userDelete=(id)=>{
+    this.props.deleteUser(id)
   }
 
   renderUserCard() {
@@ -19,11 +34,22 @@ class UserList extends React.Component {
 
     return this.props.userArray.map(user => {
       return(
-        <div  key={user.name}>
+        <div  key={user.id}>
           <div>
             name : {user.name} <br/>
             desc : {user.desc}
+            <button
+              onClick={this.userDetails.bind(this,user.id)}>
+              edit
+            </button>
+
+            <button
+              onClick={this.userDelete.bind(this,user.id)}>
+              delete
+            </button>
+
           </div>
+          <br/>
         </div>
       )
     })
@@ -33,11 +59,12 @@ class UserList extends React.Component {
   render() {
     return (
       <div>
-        <Header/>
+
         <button
-          onClick={this.userDetails.bind()}>
-          Details
+          onClick={this.newUserDetails.bind()}>
+          Add a new task
         </button>
+
         <div>
           {this.renderUserCard()}
         </div>
@@ -53,5 +80,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { getAllUsers }
+  { getAllUsers, deleteUser }
 )(UserList);
